@@ -17,7 +17,58 @@ CHERRYPIE_API_KEY=yourApiKey CHERRYPIE_API_SECRET=yourSecret PASSKIT_API_KEY=you
 
 # Paskit documentation
 
--- TODO --
+## Get all your templates
+```
+  templateList(callback)
+  templateListPromise()
+```
+  
+## Get Fields for template
+```  
+  getTemplateFieldNames(templateName, callback)
+  getTemplateFieldNamesPromise(templateName)
+```
+
+## Get pass for template and serial number
+``` 
+  getPassForTemplateSerialNumber(templateName, serialNumber, callback) 
+  getPassForTemplateSerialNumberPromise(templateName, serialNumber)
+``` 
+
+## Get all passes for template
+``` 
+  getPassesForTemplate(templateName, callback)
+  getPassesForTemplatePromise(templateName)
+``` 
+
+## Issue (create) pass for template
+```
+  passIssue(templateName, fieldsData, callback) 
+  passIssuePromise(templateName, fieldsData)
+```
+
+## Invalidate pass by unique_id
+```
+  invalidate(unique_id, callback)
+  invalidatePromise(unique_id) 
+```
+## Invalidate pass by template and serial number
+```
+  invalidateTemplateSerialNumber(template,serialNumber,callback)
+  invalidateTemplateSerialNumberPromise(template,serialNumber)
+```
+
+## Invalidate pass by unique_id
+```
+  update(unique_id, newData, callback) 
+  updatePromise(unique_id, newData) 
+```
+
+ ## Update pass by template and serial number
+```
+  updateTemplateSerialNumber(template,serialNumber, newData, callback)
+  updateTemplateSerialNumberPromise(template,serialNumber, newData) 
+```
 
 # Cherry Pie documentation
 ```
