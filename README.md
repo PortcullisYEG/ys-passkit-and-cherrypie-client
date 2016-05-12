@@ -16,7 +16,14 @@ CHERRYPIE_API_KEY=yourApiKey CHERRYPIE_API_SECRET=yourSecret PASSKIT_API_KEY=you
 ```
 
 # Paskit documentation
-
+```
+import {PasskitClient} from '../index.js';
+let options = {
+  apiKey: process.env.PASSKIT_API_KEY,
+  apiSecret: process.env.PASSKIT_API_SECRET
+};
+const client = new PasskitClient(options);
+```
 ## Get all your templates
 ```
   templateList(callback)
