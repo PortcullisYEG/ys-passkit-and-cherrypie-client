@@ -42,7 +42,7 @@ params:
    * dynamicData - object,null, or empty object {}
    * recoveryEmail - object or null
    
-## Get Pass bat passId 
+## Get Pass by passId 
 ``` 
 // Standart function with callback  
 getPass(passId,callback)
