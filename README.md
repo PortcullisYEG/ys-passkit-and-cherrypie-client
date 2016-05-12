@@ -12,7 +12,7 @@ npm install
 
 ## Run test
 ```
-CHERRYPIE_API_KEY=yourApiKey CHERRYPIE_API_SECRET=yourSecret PASSKIT_API_KEY=yourApiKey PASSKIT_API_SECRET=yourApiSecret/RG npm test;
+CHERRYPIE_API_KEY=yourApiKey CHERRYPIE_API_SECRET=yourSecret PASSKIT_API_KEY=yourApiKey PASSKIT_API_SECRET=yourApiSecret npm test;
 ```
 
 # Paskit documentation
@@ -79,7 +79,7 @@ let options = {
 };
 const client = new CherryPieClient(options);
 ```
-## Create Pass for template (offer)
+## Create pass for template (offer)
 ```
 // Standart function with callback  
 client.createPass(templateName, userDefinedId, dynamicData, recoveryEmail,callback)
@@ -93,7 +93,7 @@ params:
    * dynamicData - object,null, or empty object {}
    * recoveryEmail - object or null
    
-## Get Pass by passId 
+## Get pass by passId 
 ``` 
 // Standart function with callback  
 getPass(passId,callback)
