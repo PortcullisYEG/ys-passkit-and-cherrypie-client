@@ -17,7 +17,7 @@ describe('test cherryPie', () => {
 
   it('create pass', function (done) {
     this.timeout(TIMEOUT);
-    client.createPass('FreeBeer', '' + new Date().getTime(), {}, 'mblecek@gmail.com', function (err, response) {
+    client.createPass('FreeBeer', '' + new Date().getTime(), {}, null, function (err, response) {
       if (err) {
         console.log(err);
       } else {

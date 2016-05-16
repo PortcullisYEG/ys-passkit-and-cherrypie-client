@@ -34,3 +34,4 @@ node_modules
 
 #
 run-test.sh
+run-test-cherrypie.sh
