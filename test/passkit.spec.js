@@ -1,6 +1,5 @@
 import PasskitSDK from '../lib/passkit';
 import {expect} from 'chai';
-import 'babel-polyfill';
 const TIMEOUT = 20000;
 let templates = [];
 let options = {

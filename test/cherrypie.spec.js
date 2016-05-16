@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+
 import {CherryPieClient} from '../index.js';
 import {expect} from 'chai';
 import Bluebird from 'bluebird';
