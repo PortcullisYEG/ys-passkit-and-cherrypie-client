@@ -1,4 +1,4 @@
-import PasskitSDK from '../lib/passkit';
+import PasskitSDK from '../src/passkit';
 import {expect} from 'chai';
 const TIMEOUT = 20000;
 let templates = [];
@@ -72,8 +72,8 @@ describe('test passkit', () => {
         if (err) {
           console.error(err);
         } else {
-          //console.log(response);
-          pass = response.body;
+          console.log(response);
+          //pass = response.body;
         }
         done(err);
       });
@@ -86,7 +86,7 @@ describe('test passkit', () => {
         if (err) {
           console.error(err);
         } else {
-          //console.log(response);
+          console.log(response);
           //pass = response.body;
         }
         done(err);

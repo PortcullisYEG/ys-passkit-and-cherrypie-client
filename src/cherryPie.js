@@ -1,5 +1,5 @@
 /* Requires */
-import  querystring from 'querystring';
+import querystring from 'querystring';
 import client from  'urllib';
 import Bluebird from  'bluebird';
 import CryptoJS from  'crypto-js';
@@ -160,7 +160,7 @@ class CherriPieClient {
       http_options.data = data;
     }
 
-   // console.log(this.get_default_options().url + endpoint, http_options);
+    // console.log(this.get_default_options().url + endpoint, http_options);
 
     client.request(this.get_default_options().url + endpoint, http_options, function (err, data, res) {
       if (err) {
@@ -218,9 +218,30 @@ class CherriPieClient {
       data.dynamicData = dynamicData;
     if (recoveryEmail)
       data.recoveryEmail = recoveryEmail;
+    if (isInvalid)
+      data.isInvalid = true;
+    else
+      data.isInvalid = false;
+
+    if (isRedeemed)
+      data.isRedeemed = true;
+    else
+      data.isRedeemed = false;
+
     this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
   }
 
+  redeemPass(passId, callback) {
+    let data = {};
+    data.isRedeemed = true;
+    this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+  }
+
+  invalidatePass(passId, callback) {
+    let data = {};
+    data.isInvalid = true;
+    this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+  }
 
 
 };

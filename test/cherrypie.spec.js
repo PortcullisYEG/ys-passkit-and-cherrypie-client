@@ -1,5 +1,5 @@
 
-import {CherryPieClient} from '../index.js';
+import {CherryPieClient} from '../src/index.js';
 import {expect} from 'chai';
 import Bluebird from 'bluebird';
 const TIMEOUT = 20000;
@@ -13,7 +13,9 @@ const templateName = process.env.CHERRYPIE_TEST_OFFER;
 const recoveryEmail = process.env.CHERRYPIE_TEST_RECOVERY_EMAIL ? process.env.CHERRYPIE_TEST_RECOVERY_EMAIL : null;
 const client = new CherryPieClient(options);
 const userDefinedId = `USER_${new Date().getTime()}`;
+const userDefinedIdAsync = `USER_ASYNC_${new Date().getTime()}`;
 let passId = null;
+let passIdAsync = null;
 
 describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recoveryEmail}`, () => {
 
@@ -33,8 +35,9 @@ describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recover
 
   it('create pass async', function (done) {
     this.timeout(TIMEOUT);
-    client.createPassAsync(templateName, userDefinedId, {}, recoveryEmail).then((result) => {
-      passId = result.body.id;
+    client.createPassAsync(templateName, userDefinedIdAsync, {}, recoveryEmail).then((result) => {
+      //console.log(result)
+      passIdAsync = result.body.id;
       done();
     }, (err) => {
       {
@@ -44,14 +47,13 @@ describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recover
     });
   });
 
-  if (passId) {
     it('get pass instance by passID', function (done) {
       this.timeout(TIMEOUT);
       client.getPass(passId, function (err, response) {
         if (err) {
           //console.error(err);
         } else {
-          console.log(response);
+          //console.log(response);
         }
         done(err);
       });
@@ -59,8 +61,8 @@ describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recover
 
     it('get pass instance by passID async', function (done) {
       this.timeout(TIMEOUT);
-      client.getPassAsync(passId).then((result) => {
-        passId = result.body.id;
+      client.getPassAsync(passIdAsync).then((result) => {
+        //passId = result.body.id;
         done();
       }, (err) => {
         {
@@ -69,5 +71,58 @@ describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recover
         }
       });
     });
-  }
+    
+    
+    it('redeem pass instance by passID', function (done) {
+      this.timeout(TIMEOUT);
+      client.redeemPass(passId, function (err, response) {
+        if (err) {
+          //console.error(err);
+        } else {
+          //console.log(response);
+        }
+        done(err);
+      });
+    });
+
+    it('redeem pass instance by passID async', function (done) {
+      this.timeout(TIMEOUT);
+      client.redeemPassAsync(passIdAsync).then((result) => {
+        //passId = result.body.id;
+        //console.log(result)
+        done();
+      }, (err) => {
+        {
+          // console.error(err);
+          done(err);
+        }
+      });
+    });
+    
+    it('invalidate pass instance by passID', function (done) {
+      this.timeout(TIMEOUT);
+      client.invalidatePass(passId, function (err, response) {
+        if (err) {
+          //console.error(err);
+        } else {
+          //console.log(response);
+        }
+        done(err);
+      });
+    });
+
+    it('invalidate pass instance by passID async', function (done) {
+      this.timeout(TIMEOUT);
+      client.invalidatePassAsync(passIdAsync).then((result) => {
+        //passId = result.body.id;
+        //console.log(result)
+        done();
+      }, (err) => {
+        {
+          // console.error(err);
+          done(err);
+        }
+      });
+    });
+
 });

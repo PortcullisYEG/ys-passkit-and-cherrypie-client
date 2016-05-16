@@ -109,12 +109,53 @@ params:
 ## Get pass by passId 
 ``` 
 // Standart function with callback  
-getPass(passId,callback)
+client.getPass(passId,callback)
 
 //Promise  
 client.getPassAsync(passId)
 ```
 params: 
    * passId (reqired) - id 
+   
+   
+## Redeem pass by passId 
+``` 
+// Standart function with callback  
+client.redeemPass(passId,callback)
+
+//Promise  
+client.redeemPassAsync(passId)
+```
+params: 
+   * passId (reqired) - id    
+   
+## Invalidate pass by passId 
+``` 
+// Standart function with callback  
+client.invalidatePass(passId,callback)
+
+//Promise  
+client.invalidatePassAsync(passId)
+```
+params: 
+   * passId (reqired) - id       
   
  
+ 
+ ## Update pass by passId 
+``` 
+// Standart function with callback  
+client.updatePass(passId, templateName, userDefinedId, dynamicData, isInvalid, isRedeemed, recoveryEmail, callback)
+
+//Promise  
+client.updatePassAsync(passId, templateName, userDefinedId, dynamicData, isInvalid, isRedeemed, recoveryEmail) {
+```
+params: 
+   * passId (reqired) - id   
+   * templateName
+   * userDefinedId
+   * dynamicData
+   * isInvalid
+   * isRedeemed 
+   * recoveryEmail    
+  
