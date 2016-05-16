@@ -1,7 +1,7 @@
 import PasskitSDK from '../lib/passkit';
 import {expect} from 'chai';
 import 'babel-polyfill';
-const TIMEOUT = 7500;
+const TIMEOUT = 20000;
 let templates = [];
 let options = {
   apiKey: process.env.PASSKIT_API_KEY,
@@ -17,9 +17,9 @@ describe('test passkit', () => {
       this.timeout(TIMEOUT);
       passkitSDK.templateList(function (err, response) {
         if (err) {
-          console.log(err);
+          console.error(err);
         } else {
-          console.log(response);
+          //console.log(response);
           templates = response.body.templates;
         }
         done(err);
@@ -32,10 +32,10 @@ describe('test passkit', () => {
       this.timeout(TIMEOUT * 3);
       passkitSDK.getTemplateFieldNames(templates[templates.length-1], function (err, response) {
         if (err) {
-          console.log(err);
+          console.error(err);
           done(err);
         } else {
-          console.log(JSON.stringify(response));
+          //console.log(JSON.stringify(response));
           done();
         }
 
@@ -46,8 +46,8 @@ describe('test passkit', () => {
 
   it('list field names for template promise', function (done) {
       this.timeout(TIMEOUT * 3);
-      passkitSDK.getTemplateFieldNamesPromise(templates[templates.length-1]).then((e) => {
-        console.log(JSON.stringify(e));
+      passkitSDK.getTemplateFieldNamesAsync(templates[templates.length-1]).then((e) => {
+        //console.log(JSON.stringify(e));
         done();
       }, done);
     }
@@ -58,9 +58,9 @@ describe('test passkit', () => {
       this.timeout(TIMEOUT * 3);
       passkitSDK.getPassesForTemplate(templates[templates.length-1], function (err, response) {
         if (err) {
-          console.log(err);
+          console.error(err);
         } else {
-          // console.log(JSON.stringify(response));
+          //console.log(JSON.stringify(response));
         }
         done(err);
       });
@@ -71,9 +71,9 @@ describe('test passkit', () => {
       this.timeout(TIMEOUT);
       passkitSDK.passIssue(templates[templates.length-1], {}, function (err, response) {
         if (err) {
-          console.log(err);
+          console.error(err);
         } else {
-          // console.log(response);
+          //console.log(response);
           pass = response.body;
         }
         done(err);
@@ -85,14 +85,13 @@ describe('test passkit', () => {
       this.timeout(TIMEOUT);
       passkitSDK.invalidate(pass.uniqueID, function (err, response) {
         if (err) {
-          console.log(err);
+          console.error(err);
         } else {
-          console.log(response);
+          //console.log(response);
           //pass = response.body;
         }
         done(err);
       });
     }
   );
-
 });

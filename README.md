@@ -1,6 +1,6 @@
 # ys-passkit-and-cherrypie-client
 
-Node.js clients for passkit and cherrypie API.
+Node.js clients for passkit and cherrypie API. 
 
 # Development
 
@@ -11,8 +11,14 @@ npm install
 ```
 
 ## Run test
+
+### NPM test
 ```
 CHERRYPIE_API_KEY=yourApiKey CHERRYPIE_API_SECRET=yourSecret PASSKIT_API_KEY=yourApiKey PASSKIT_API_SECRET=yourApiSecret npm test;
+```
+### CherryPie test
+```
+CHERRYPIE_TEST_OFFER=SomeOffer CHERRYPIE_TEST_RECOVERY_EMAIL=example@email.com CHERRYPIE_API_KEY=apikey CHERRYPIE_API_SECRET=secret  node_modules/.bin/mocha --compilers js:babel-core/register ./test/cherrypie.spec.js;
 ```
 
 # Paskit documentation
@@ -27,54 +33,54 @@ const client = new PasskitClient(options);
 ## Get all your templates
 ```
   templateList(callback)
-  templateListPromise()
+  templateListAsync()
 ```
   
 ## Get Fields for template
 ```  
   getTemplateFieldNames(templateName, callback)
-  getTemplateFieldNamesPromise(templateName)
+  getTemplateFieldNamesAsync(templateName)
 ```
 
 ## Get pass for template and serial number
 ``` 
   getPassForTemplateSerialNumber(templateName, serialNumber, callback) 
-  getPassForTemplateSerialNumberPromise(templateName, serialNumber)
+  getPassForTemplateSerialNumberAsync(templateName, serialNumber)
 ``` 
 
 ## Get all passes for template
 ``` 
   getPassesForTemplate(templateName, callback)
-  getPassesForTemplatePromise(templateName)
+  getPassesForTemplateAsync(templateName)
 ``` 
 
 ## Issue (create) pass for template
 ```
   passIssue(templateName, fieldsData, callback) 
-  passIssuePromise(templateName, fieldsData)
+  passIssueAsync(templateName, fieldsData)
 ```
 
 ## Invalidate pass by unique_id
 ```
   invalidate(unique_id, callback)
-  invalidatePromise(unique_id) 
+  invalidateAsync(unique_id) 
 ```
 ## Invalidate pass by template and serial number
 ```
   invalidateTemplateSerialNumber(template,serialNumber,callback)
-  invalidateTemplateSerialNumberPromise(template,serialNumber)
+  invalidateTemplateSerialNumberAsync(template,serialNumber)
 ```
 
 ## Invalidate pass by unique_id
 ```
   update(unique_id, newData, callback) 
-  updatePromise(unique_id, newData) 
+  updateAsync(unique_id, newData) 
 ```
 
  ## Update pass by template and serial number
 ```
   updateTemplateSerialNumber(template,serialNumber, newData, callback)
-  updateTemplateSerialNumberPromise(template,serialNumber, newData) 
+  updateTemplateSerialNumberAsync(template,serialNumber, newData) 
 ```
 
 # Cherry Pie documentation
