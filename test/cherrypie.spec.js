@@ -16,8 +16,36 @@ const userDefinedId = `USER_${new Date().getTime()}`;
 const userDefinedIdAsync = `USER_ASYNC_${new Date().getTime()}`;
 let passId = null;
 let passIdAsync = null;
+let campaignName = null;
 
 describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recoveryEmail}`, () => {
+
+
+  it('get campaigns', function (done) {
+    this.timeout(TIMEOUT);
+    client.getCampaigns(function (err, response) {
+      if (err) {
+        //console.error(err);
+      } else {
+        //console.log(JSON.stringify(response))
+        campaignName = response.body[0].name
+      }
+      done(err);
+    });
+  });
+  
+  
+    it('get templates for campaigns', function (done) {
+    this.timeout(TIMEOUT);
+    client.getCampaingTemplates(campaignName, function (err, response) {
+      if (err) {
+        //console.error(err);
+      } else {
+        // console.log(JSON.stringify(response))
+      }
+      done(err);
+    });
+  });
 
 
   it('create pass', function (done) {

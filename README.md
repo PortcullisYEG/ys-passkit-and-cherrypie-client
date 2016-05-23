@@ -92,6 +92,28 @@ let options = {
 };
 const client = new CherryPieClient(options);
 ```
+
+
+## Get List of campaigns
+```
+// Standart function with callback  
+client.getCampaigns(callback)
+ 
+// Promise  
+client.getCampaignsAsync()
+```
+
+## Get List of templates (offers) for campaign
+```
+// Standart function with callback  
+client.getCampaingTemplates(campaingName,callback)
+ 
+// Promise  
+client.getCampaingTemplatesAsync(campaingName)
+```
+params: 
+  * campiagn
+
 ## Create pass for template (offer)
 ```
 // Standart function with callback  

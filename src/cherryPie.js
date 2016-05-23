@@ -191,6 +191,13 @@ class CherriPieClient {
     this.setOptions(options);
   }
 
+  getCampaigns(callback) {
+    this.doQuery('GET', escape('/campaigns'), {}, {}, callback);
+  }
+  
+  getCampaingTemplates(campaignName,callback) {
+    this.doQuery('GET', escape('/campaigns/'+campaignName+'/templates'), {}, {}, callback);
+  }
 
 
   createPass(templateName, userDefinedId, dynamicData, recoveryEmail, callback) {
