@@ -128,6 +128,11 @@ params:
    * dynamicData - object,null, or empty object {}
    * recoveryEmail - object or null
    
+
+Notes: 
+   * if you do need own distribution (email, url), pass can be distribute via URL https://q.passkit.net/~/#/p/{passID} 
+   
+   
 ## Get pass by passId 
 ``` 
 // Standart function with callback  
