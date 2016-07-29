@@ -27,7 +27,7 @@ export default class PasskitSDK {
     }
     Bluebird.promisifyAll(this);
   }
-  
+
   /* User-Agent to be send into Headers request */
   //static user_agent = 'PassKIT/rest-sdk-nodejs ' + version + ' (node ' + process.version + '-' + process.arch + '-' + process.platform + ')';
 
@@ -111,6 +111,10 @@ export default class PasskitSDK {
     this.doQuery('GET', '/template/' + template_id + '/fieldnames', {}, {}, callback);
   }
 
+  getTemplateFieldNamesFull(template_id, callback) {
+    this.doQuery('GET', '/template/' + template_id + '/fieldnames/full', {}, {}, callback);
+  }
+
   getPassForTemplateSerialNumber(template_id, serialNumber, callback) {
     this.doQuery('GET', escape('/template/' + template_id + '/serial/'+ serialNumber), {}, {}, callback);
   }
@@ -119,7 +123,7 @@ export default class PasskitSDK {
     //"https://api.passkit.com/v1/template/{templateName}/passes"
     this.doQuery('GET', escape('/template/' + template_id + '/passes/'), {}, {}, callback);
   }
-  
+
   passIssue(template_id, req_data, callback) {
     this.doQuery('POST', escape('/pass/issue/template/' + template_id), req_data, {}, callback);
   }
@@ -132,6 +136,17 @@ export default class PasskitSDK {
     this.doQuery('GET', escape('/pass/invalidate/template/' + template + '/serial/' +serialNumber), {}, {}, callback);
   }
 
+  getPassByTemplateSerialNumber(template_id, serialNumber, callback) {
+    this.doQuery('GET', escape('/pass/get/template/' + template_id + '/serial/'+ serialNumber), {}, {}, callback);
+  }
+
+  getPassByShareID(shareid, callback) {
+    this.doQuery('GET', escape('/pass/shareid/' + shareid), {}, {}, callback);
+  }
+
+  getPassByID(passid, callback) {
+    this.doQuery('GET', escape('/pass/get/passid/' + passid ), {}, {}, callback);
+  }
 
 
 

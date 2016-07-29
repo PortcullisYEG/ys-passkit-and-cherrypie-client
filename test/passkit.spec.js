@@ -9,6 +9,8 @@ let options = {
 
 const passkitSDK = new PasskitSDK(options);
 let pass;
+let serialNumber;
+let shareID;
 
 describe('test passkit', () => {
 
@@ -29,7 +31,7 @@ describe('test passkit', () => {
 
   it('list field names for template', function (done) {
       this.timeout(TIMEOUT * 3);
-      passkitSDK.getTemplateFieldNames(templates[templates.length-1], function (err, response) {
+      passkitSDK.getTemplateFieldNames("CITI3", function (err, response) {
         if (err) {
           console.error(err);
           done(err);
@@ -45,7 +47,7 @@ describe('test passkit', () => {
 
   it('list field names for template promise', function (done) {
       this.timeout(TIMEOUT * 3);
-      passkitSDK.getTemplateFieldNamesAsync(templates[templates.length-1]).then((e) => {
+      passkitSDK.getTemplateFieldNamesAsync("CITI3").then((e) => {
         //console.log(JSON.stringify(e));
         done();
       }, done);
@@ -53,22 +55,93 @@ describe('test passkit', () => {
   );
 
 
+  it('list all field names for template', function (done) {
+      this.timeout(TIMEOUT * 3);
+      passkitSDK.getTemplateFieldNamesFull("CITI3", function (err, response) {
+        if (err) {
+          console.error(err);
+          done(err);
+        } else {
+          console.log(JSON.stringify(response));
+          done();
+        }
+
+      });
+    }
+  );
+
+
+  it('list all field names for template promise', function (done) {
+      this.timeout(TIMEOUT * 3);
+      passkitSDK.getTemplateFieldNamesFullAsync("CITI3").then((e) => {
+       console.log(JSON.stringify(e,null,2));
+        done();
+      }, done);
+    }
+  );
+
+
+
   it('list passes for template', function (done) {
       this.timeout(TIMEOUT * 3);
-      passkitSDK.getPassesForTemplate(templates[templates.length-1], function (err, response) {
+      passkitSDK.getPassesForTemplate("CITI3", function (err, response) {
         if (err) {
           console.error(err);
         } else {
-          //console.log(JSON.stringify(response));
+          //console.log(JSON.stringify(response.body.passRecords,null,2));
+          serialNumber = response.body.passRecords.pass_2.passMeta.serialNumber;
+          shareID = response.body.passRecords.pass_2.passMeta.shareID;
         }
         done(err);
       });
     }
   );
 
+
+  it('getPassByShareID', function (done) {
+      this.timeout(TIMEOUT * 3);
+      passkitSDK.getPassByShareID(shareID, function (err, response) {
+        if (err) {
+          console.error(err);
+        } else {
+         // console.log(JSON.stringify(response,null,2));
+        }
+        done(err);
+      });
+    }
+  );
+
+
+  it('getPassByID', function (done) {
+      this.timeout(TIMEOUT * 3);
+      passkitSDK.getPassByID("33xUwHDW8ZZq", function (err, response) {
+        if (err) {
+          console.error(err);
+        } else {
+         // console.log(JSON.stringify(response,null,2));
+        }
+        done(err);
+      });
+    }
+  );
+
+  it('getPassByTemplateSerialNumber', function (done) {
+      this.timeout(TIMEOUT * 3);
+      passkitSDK.getPassByTemplateSerialNumber("CITI3",serialNumber, function (err, response) {
+        if (err) {
+          console.error(err);
+        } else {
+         // console.log(JSON.stringify(response,null,2));
+        }
+        done(err);
+      });
+    }
+  );
+
+/*
   it('issue ticket', function (done) {
       this.timeout(TIMEOUT);
-      passkitSDK.passIssue(templates[templates.length-1], {}, function (err, response) {
+      passkitSDK.passIssue("CITI3", {}, function (err, response) {
         if (err) {
           console.error(err);
         } else {
@@ -82,15 +155,16 @@ describe('test passkit', () => {
 
   it('invalidate ticket', function (done) {
       this.timeout(TIMEOUT);
-      passkitSDK.invalidate(pass.uniqueID, function (err, response) {
+      passkitSDK.invalidate(uniqueID, function (err, response) {
         if (err) {
           console.error(err);
         } else {
-          console.log(response);
+           console.log(response);
           //pass = response.body;
         }
         done(err);
       });
     }
   );
+*/
 });
