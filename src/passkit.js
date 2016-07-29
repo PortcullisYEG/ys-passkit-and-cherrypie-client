@@ -115,6 +115,14 @@ export default class PasskitSDK {
     this.doQuery('GET', '/template/' + template_id + '/fieldnames/full', {}, {}, callback);
   }
 
+  updateTemplate(template_id, fields, push, callback) {
+    this.doQuery('GET', '/template/update/' + template_id + (push?'/push':''), fields, {}, callback);
+  }
+
+  resetTemplate(template_id, push, callback) {
+    this.doQuery('GET', '/template/' + template_id + '/reset' + (push?'/push':''), {}, {}, callback);
+  }
+
   getPassForTemplateSerialNumber(template_id, serialNumber, callback) {
     this.doQuery('GET', escape('/template/' + template_id + '/serial/'+ serialNumber), {}, {}, callback);
   }

@@ -62,7 +62,7 @@ describe('test passkit', () => {
           console.error(err);
           done(err);
         } else {
-          console.log(JSON.stringify(response));
+         // console.log(JSON.stringify(response));
           done();
         }
 
@@ -74,6 +74,66 @@ describe('test passkit', () => {
   it('list all field names for template promise', function (done) {
       this.timeout(TIMEOUT * 3);
       passkitSDK.getTemplateFieldNamesFullAsync("CITI3").then((e) => {
+       //console.log(JSON.stringify(e,null,2));
+        done();
+      }, done);
+    }
+  );
+
+
+
+    it('updateTemplate push=false', function (done) {
+      this.timeout(TIMEOUT * 3);
+      const template_id = 'Vzor membership'
+      const fields = {
+        "Pole 1_label": "Pole 1 - "+new Date().getTime(),
+        "Pole 1": "TEXT - "+new Date().getTime(),
+                "Pole 1 B_label": "Pole 1 B - "+new Date().getTime(),
+        "Pole 1 B": "Pole 1 B - "+new Date().getTime(),
+      }
+      const push=false;
+      passkitSDK.updateTemplateAsync(template_id, fields, push).then((e) => {
+       console.log(JSON.stringify(e,null,2));
+        done();
+      }, done);
+    }
+  );
+
+
+  it('updateTemplate  push=true', function (done) {
+      this.timeout(TIMEOUT * 3);
+      const template_id = 'Vzor membership'
+      const fields = {
+        "Pole 1_label": "Pole 1 - "+new Date().getTime(),
+        "Pole 1": "TEXT - "+new Date().getTime(),
+        "Pole 1 B_label": "Pole 1 B - "+new Date().getTime(),
+        "Pole 1 B": "Pole 1 B - "+new Date().getTime(),
+      }
+      const push=true;
+      passkitSDK.updateTemplateAsync(template_id, fields, push).then((e) => {
+       console.log(JSON.stringify(e,null,2));
+        done();
+      }, done);
+    }
+  );
+
+  it('resetTemplate push=false', function (done) {
+      this.timeout(TIMEOUT * 3);
+      const template_id = 'Vzor membership'
+      const push=false;
+      passkitSDK.resetTemplateAsync(template_id, push).then((e) => {
+       console.log(JSON.stringify(e,null,2));
+        done();
+      }, done);
+    }
+  );
+
+
+  it('resetTemplate  push=true', function (done) {
+      this.timeout(TIMEOUT * 3);
+      const template_id = 'Vzor membership'
+      const push=true;
+      passkitSDK.resetTemplateAsync(template_id,  push).then((e) => {
        console.log(JSON.stringify(e,null,2));
         done();
       }, done);

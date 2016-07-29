@@ -48,6 +48,24 @@ const client = new PasskitClient(options);
   getTemplateFieldNamesFullAsync(templateName)
 ```
 
+## Update template
+```  
+  updateTemplate(templateName,fields,push callback)
+  updateTemplateAsync(templateName,fields,push callback)
+```
+
+* fields - { param: value}
+* push - boolean
+
+## Reset template
+```  
+  resetTemplate(templateName,push callback)
+  resetlateAsync(templateName,push callback)
+```
+
+* push - boolean
+
+
 ## Get pass for template and serial number
 ``` 
   getPassForTemplateSerialNumber(templateName, serialNumber, callback) 
