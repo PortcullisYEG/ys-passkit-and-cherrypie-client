@@ -1,7 +1,7 @@
 /* Requires */
-import  querystring from 'querystring';
-import  client from  'urllib';
-import  Bluebird from  'bluebird';
+const  querystring = require( 'querystring');
+const  client =require(  'urllib');
+const  Bluebird =require(  'bluebird');
 const version = '0.1.9';
 
 /* Create our default options */
@@ -15,7 +15,7 @@ let default_options = {
 };
 
 /* Main */
-export default class PasskitSDK {
+class PasskitSDK {
 
   constructor(options) {
     if (options !== undefined && typeof options === 'object') {
@@ -168,3 +168,5 @@ export default class PasskitSDK {
     this.doQuery('PUT', escape('/pass/update/template/' + template + '/serial/' +serialNumber+ '/push'), req_data, {}, callback);
   }
 };
+
+module.exports = PasskitSDK;

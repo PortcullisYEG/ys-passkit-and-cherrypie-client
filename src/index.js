@@ -1,4 +1,3 @@
-import  passkit from './passkit';
-import cherryPie  from'./cherryPie';
-export const  PasskitClient = passkit;
-export const CherryPieClient = cherryPie;
+const passkit = require('./passkit');
+const cherryPie = require('./cherryPie');
+module.exports = {PasskitClient: passkit, CherryPieClient: cherryPie};
