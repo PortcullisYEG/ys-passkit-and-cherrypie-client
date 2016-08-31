@@ -19,7 +19,7 @@ let passIdAsync = null;
 let campaign = null;
 let certificates = [];
 
-const testImagePath = path.join(__dirname, "resources", "Generic", "icon.png");
+const testImagePath = path.join(__dirname, "resources", "Generic.pass", "icon.png");
 
 describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recoveryEmail}`, () => {
 
@@ -34,23 +34,24 @@ describe(`CherryPie for templateName=${templateName} and recoveryEmail ${recover
 
     it('upload image as file', function (done) {
         this.timeout(TIMEOUT);
-        client.uploadImage(testImagePath, function (err, response) {
-            console.log(JSON.stringify(response.body));
+        client.uploadImage(testImagePath, function (err, response, res) {
+            console.log(JSON.stringify(err),null,2);
+            console.log(JSON.stringify(response.body),null,2);
+            console.log(JSON.stringify(res),null,2);
             done(err);
         });
     });
 
-
-    it('upload image as file', function (done) {
+/*
+    it('upload image as buffer', function (done) {
         this.timeout(TIMEOUT);
-        client.getCetificates(function (err, response) {
-
+        const buffer = fs.readFileSync(testImagePath);
+        client.uploadImage(buffer, function (err, response) {
             console.log(JSON.stringify(response.body));
-            certificates = response.body;
             done(err);
         });
     });
-
+*/
 
     it('create campaign', function (done) {
         this.timeout(TIMEOUT);

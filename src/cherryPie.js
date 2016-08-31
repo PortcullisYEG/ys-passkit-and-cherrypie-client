@@ -4,7 +4,7 @@ const btoa = require('btoa');
 const querystring = require('querystring');
 const client = require('urllib');
 const Bluebird = require('bluebird');
-const formstream = require('formstream');
+const request = require('superagent');
 
 const TemplateImageNamesList = ['passbook-IconFile',
     'passbook-LogoFile',
@@ -132,15 +132,10 @@ class CherriPieClient {
         }
     }
 
-    doQuery(http_method, endpoint, req_data, http_options_param, callback) {
+    doQuery(http_method, endpoint, req_data, http_options, callback) {
 
         // Add version to resource
         var endpoint = '/' + this.get_default_options().apiVersion + endpoint;
-
-        // Empty http_options (declare)
-        var http_options = {
-            timeout: 30000
-        };
 
         // JSON or QueryString
         var data = req_data;
@@ -164,7 +159,7 @@ class CherriPieClient {
             http_options.headers = {};
         }
         http_options.headers.Authorization = 'PKAuth ' + generateJWT(this.get_default_options().apiKey, this.get_default_options().apiSecret);
-
+        http_options.headers.timeout = 30000;
         // Method
         http_options.method = http_method;
 
@@ -255,18 +250,26 @@ class CherriPieClient {
 
     /* upload image */
 
+    /**
+     *
+     * @param image  {string} (required)  Your campaign’s unique identifier. The name must only contain letters, numbers or the underscore character. and cannot contain any spaces (e.g. Happy_birthday_2018). Please note, this identifier cannot be changed after the campaign is created.
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
     uploadImage(image, callback) {
+        let agent1 = request.agent();
+        agent1 = agent1.post(this.get_default_options().url + '/' + this.get_default_options().apiVersion + '/images')
 
-        const form = formstream();
+        if (typeof image === "string")
+            agent1 = agent1.attach('image', image);
 
-        if ((typeof image).toLowerCase() === 'string')
-            form.file('image', image);
+        /*
+        if (image instanceof Buffer)
+            agent1 = agent1.field('image', image);
+        */
 
-        if ((typeof image).toLowerCase() === 'buffer')
-            form.buffer('image', image);
-
-        //form.field('hello', '你好urllib');
-        this.doQuery('POST', escape('/images'), {}, {stream: form, headers: form.headers()}, callback);
+        agent1 = agent1.set("Authorization", 'PKAuth ' + generateJWT(this.get_default_options().apiKey, this.get_default_options().apiSecret))
+            .end(callback);
     }
 
     /* Template API*/
