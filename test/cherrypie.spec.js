@@ -127,7 +127,7 @@ describe(`CherryPie`, () => {
 
     it('get templates for campaigns', function (done) {
         this.timeout(TIMEOUT);
-        client.getCampaingTemplates(campaign.name, function (err, response) {
+        client.getCampaignTemplates(campaign.name, function (err, response) {
             logger(response.body);
             templates = response.body;
             done(err);

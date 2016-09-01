@@ -1,0 +1,9 @@
+{
+  "source": {
+    "include": [
+      "./src/cherrypie/CherryPieClient.js",
+      "./src/passkit/PasskitClient.js"
+    ]
+  },
+  "destination": "./doc/out"
+}

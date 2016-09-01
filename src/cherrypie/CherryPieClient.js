@@ -8,6 +8,16 @@ const request = require('superagent');
 const fs = require('fs');
 const path = require('path');
 
+const default_options = {
+    'connection_timeout': '10000',
+    'connection_readtimeout': '30000',
+    'url': 'https://api-pass.passkit.net',
+    'apiKey': '',
+    'apiSecret': '',
+    'apiVersion': 'v2',
+};
+
+
 const TemplateImageNamesList = [
     'passbook-IconFile',
     'passbook-LogoFile',
@@ -23,127 +33,154 @@ const TemplateImageNamesList = [
     'passbookRedeem-BgFile'
 ];
 
-
-function generateJWT(key, secret) {
-    //header should always contain this information, our v2 api currently only accepts HS256 encryption
-    const header = {
-        "alg": "HS256",
-        "typ": "JWT"
-    };
-
-    // get the current time in seconds
-    const time_now = Math.floor(new Date().getTime() / 1000);
-    /* For the expiry time, I've added 30 seconds, maximum allowed by our api is 1 minute, this is to ensure that if someone did intercept your api request, they would only be able to use your authorisation token for up to this time.
-     Feel free to make it shorter, the request should usually reach our system within a few seconds. */
-    const exp = time_now + 30;
-
-    //the body should only contain the api key and expiry time
-    const body = {
-        "exp": exp,
-        "key": key
-    };
-
-    //create token variable
-    let token = [];
-    // all parts of the token need to be base 64 url encoded
-    // first part is generated from the JSON string of the header object
-    token[0] = base64url(JSON.stringify(header));
-    // second part is generated from the JSON string of the body object
-    token[1] = base64url(JSON.stringify(body));
-    // thirs part is generated from the hash of token[0] joined with token[1] by a dot "."
-    token[2] = genTokenSign(token, secret);
-
-    // the token itself is just the three sections joined with dots "."
-    return token.join(".");
-    // make sure that the Authorisation header of the HTTP request contains "PKAuth " before the token string
-}
-
-
-function genTokenSign(token, secret) {
-    if (token.length != 2) {
-        return
-    }
-    // generate the hash of (token[0] + "." + token[1])
-    var hash = CryptoJS.HmacSHA256(token.join("."), secret);
-    // convert the hash to base64
-    var base64Hash = CryptoJS.enc.Base64.stringify(hash);
-    // both of these functions are using google's crypto-js
-
-    // convert the base64 string into an url safe string
-    return urlConvertBase64(base64Hash);
-}
-
-
-function base64url(input) {
-    // Encode to normal base64
-    var base64String = btoa(input);
-    // convert the base64 string into an url safe string
-    return urlConvertBase64(base64String);
-}
-
-function urlConvertBase64(input) {
-
-    // Remove padding equal characters
-    var output = input.replace(/=+$/, '');
-
-    // Replace characters according to base64url specifications
-    output = output.replace(/\+/g, '-');
-    output = output.replace(/\//g, '_');
-
-    return output;
-}
-
-
-/* Create our default options */
-let default_options = {
-    'connection_timeout': '10000',
-    'connection_readtimeout': '30000',
-    'url': 'https://api-pass.passkit.net',
-    'apiKey': '',
-    'apiSecret': '',
-    'apiVersion': 'v2',
-};
-
-/* Main */
-class CherriPieClient {
+/**
+ * this is CherryPieClient class
+ */
+class CherryPieClient {
 
     constructor(options) {
-        if (options !== undefined && typeof options === 'object') {
-            let opt = default_options;
-            for (var key in options) {
-                opt[key] = options[key];
-            }
-            this.opt = opt;
-        }
+        this.opt = Object.assign({}, default_options, options);
         Bluebird.promisifyAll(this);
     }
 
 
-    /* User-Agent to be send into Headers request */
-    //static user_agent = 'PassKIT/rest-sdk-nodejs ' + version + ' (node ' + process.version + '-' + process.arch + '-' + process.platform + ')';
-
-
-    /* Function to retrive the default options */
+    /**
+     *  Function to retrive the default options
+     * */
     get_default_options() {
         return this.opt;
     }
 
 
-    /* Function to initialize options on SDK */
+    /**
+     *  Function to initialize options on Client
+     *  */
     setOptions(options) {
         if (options !== undefined && typeof options === 'object') {
-            this.opt = this.update_options(default_options, options);
+            this.opt = Object.assign({}, default_options, options);
         }
     }
 
+    /**
+     *
+     * Generate token from  pair key & secret
+     *
+     * @param key
+     * @param secret
+     * @returns {string}
+     */
+    generateJWT(key, secret) {
+        //header should always contain this information, our v2 api currently only accepts HS256 encryption
+        const header = {
+            "alg": "HS256",
+            "typ": "JWT"
+        };
+
+        // get the current time in seconds
+        const time_now = Math.floor(new Date().getTime() / 1000);
+        /* For the expiry time, I've added 30 seconds, maximum allowed by our api is 1 minute, this is to ensure that if someone did intercept your api request, they would only be able to use your authorisation token for up to this time.
+         Feel free to make it shorter, the request should usually reach our system within a few seconds. */
+        const exp = time_now + 30;
+
+        //the body should only contain the api key and expiry time
+        const body = {
+            "exp": exp,
+            "key": key
+        };
+
+        //create token variable
+        let token = [];
+        // all parts of the token need to be base 64 url encoded
+        // first part is generated from the JSON string of the header object
+        token[0] = this.base64url(JSON.stringify(header));
+        // second part is generated from the JSON string of the body object
+        token[1] = this.base64url(JSON.stringify(body));
+        // thirs part is generated from the hash of token[0] joined with token[1] by a dot "."
+        token[2] = this.genTokenSign(token, secret);
+
+        // the token itself is just the three sections joined with dots "."
+        return token.join(".");
+        // make sure that the Authorisation header of the HTTP request contains "PKAuth " before the token string
+    }
+
+    /**
+     *
+     *  generate token sign
+     *
+     * @param token
+     * @param secret
+     * @returns {*}
+     */
+    genTokenSign(token, secret) {
+        if (token.length != 2) {
+            return
+        }
+        // generate the hash of (token[0] + "." + token[1])
+        var hash = CryptoJS.HmacSHA256(token.join("."), secret);
+        // convert the hash to base64
+        var base64Hash = CryptoJS.enc.Base64.stringify(hash);
+        // both of these functions are using google's crypto-js
+
+        // convert the base64 string into an url safe string
+        return this.urlConvertBase64(base64Hash);
+    }
+
+    /**
+     *
+     * @param input
+     * @returns {*}
+     */
+    base64url(input) {
+        // Encode to normal base64
+        var base64String = btoa(input);
+        // convert the base64 string into an url safe string
+        return this.urlConvertBase64(base64String);
+    }
+
+    /**
+     *
+     * Converts url to Base64
+     *
+     * @param input
+     * @returns {XML|string|void|*}
+     */
+    urlConvertBase64(input) {
+        // Remove padding equal characters
+        var output = input.replace(/=+$/, '');
+        // Replace characters according to base64url specifications
+        output = output.replace(/\+/g, '-');
+        output = output.replace(/\//g, '_');
+        return output;
+    }
+
+    /**
+     *
+     *  Prepare base url for API requests
+     *
+     * @returns {string}
+     */
     getBaseUrl() {
         return this.get_default_options().url + '/' + this.get_default_options().apiVersion;
     }
 
+    /**
+     *
+     * Returns value for Authorization header
+     *
+     * @returns {string}
+     */
     getAuthorization() {
-        return 'PKAuth ' + generateJWT(this.get_default_options().apiKey, this.get_default_options().apiSecret);
+        return 'PKAuth ' + this.generateJWT(this.get_default_options().apiKey, this.get_default_options().apiSecret);
     }
 
+    /**
+     *
+     * @param http_method
+     * @param endpoint
+     * @param req_data
+     * @param http_options
+     * @param callback
+     */
     doQuery(http_method, endpoint, req_data, http_options, callback) {
         // JSON or QueryString
         var data = req_data;
@@ -212,7 +249,6 @@ class CherriPieClient {
     }
 
 
-
     /**
      *
      * Create new campaign in cherry pie
@@ -234,29 +270,36 @@ class CherriPieClient {
         this.doQuery('POST', escape('/campaigns'), data, {}, callback);
     }
 
-    /*
-    *
-    * Return all campaigns in Cherry Pie
-    * @param callback {function} standart callback function(error,response);
-    *
-    */
+    /**
+     *
+     * Return all campaigns in Cherry Pie
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
     getCampaigns(callback) {
         this.doQuery('GET', escape('/campaigns'), {}, {}, callback);
     }
 
-    getCampaingTemplates(campaignName, callback) {
+    /**
+     *
+     * Return all templates for campaign with name
+     * @param campaigName {string} campaign name
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
+    getCampaignTemplates(campaignName, callback) {
         this.doQuery('GET', escape('/campaigns/' + campaignName + '/templates'), {}, {}, callback);
     }
 
-    /* Apple Certificates API  */
+    /**
+     *
+     * Return all certificates for client
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
     getCetificates(callback) {
         this.doQuery('GET', escape('/passbookCerts'), {}, {}, callback);
     }
-
-
-    /* images*/
-
-    /* upload image */
 
     /**
      *
@@ -287,24 +330,33 @@ class CherriPieClient {
 
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
-            if (tmpFile)
-                fs.unlinkSync(tmpFile);
+            //  if (tmpFile)
+            //     fs.unlinkSync(tmpFile);
             callback(err, res);
         });
         return agent1;
     }
 
-    /* Template API*/
-
-
+    /**
+     *
+     * create template for campaign
+     * @param data
+     *
+     *
+     *
+     *
+     *
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
     createTemplate(data, callback) {
 
         let tmpFile = null;
         let agent1 = request.agent();
         agent1 = agent1.post(this.getBaseUrl() + '/templates');
-        for (let key of TemplateImageNamesList){
+        for (let key of TemplateImageNamesList) {
             if (typeof data[key] === "string")
-                agent1 = agent1.attach(key,  data[key]);
+                agent1 = agent1.attach(key, data[key]);
         }
         //agent1 = agent1.send(data.jsonBody);
         agent1.field('jsonBody', JSON.stringify(data.jsonBody));
@@ -315,10 +367,9 @@ class CherriPieClient {
         return agent1;
     }
 
-    getTemplate(passId, callback) {
-        this.doQuery('GET', escape('/templates/' + passId), {}, {}, callback);
+    getTemplate(templateName, callback) {
+        this.doQuery('GET', escape('/templates/' + templateName), {}, {}, callback);
     }
-
 
 
     /* PASS API */
@@ -377,8 +428,5 @@ class CherriPieClient {
         this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
     }
 
-
 }
-
-
-module.exports = CherriPieClient;
+module.exports = CherryPieClient;

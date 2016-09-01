@@ -1,4 +1,4 @@
-import PasskitSDK from '../src/passkit';
+import PasskitSDK from '../src/passkit/PasskitClient';
 import {expect} from 'chai';
 const TIMEOUT = 20000;
 let templates = [];

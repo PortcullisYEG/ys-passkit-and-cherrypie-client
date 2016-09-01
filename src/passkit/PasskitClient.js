@@ -14,8 +14,10 @@ let default_options = {
   'apiVersion': 'v1',
 };
 
-/* Main */
-class PasskitSDK {
+/**
+ * this is CherryPieClient class
+ */
+class PasskitClient {
 
   constructor(options) {
     if (options !== undefined && typeof options === 'object') {
@@ -169,4 +171,4 @@ class PasskitSDK {
   }
 };
 
-module.exports = PasskitSDK;
+module.exports = PasskitClient;

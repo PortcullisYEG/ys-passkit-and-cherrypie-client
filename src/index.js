@@ -1,3 +1,3 @@
-const passkit = require('./passkit');
-const cherryPie = require('./cherryPie');
-module.exports = {PasskitClient: passkit, CherryPieClient: cherryPie};
+const CherriPieClient = require('./cherrypie/CherryPieClient');
+const passkit = require('./passkit/PasskitClient');
+module.exports = {PasskitClient: passkit, CherryPieClient: CherriPieClient};
