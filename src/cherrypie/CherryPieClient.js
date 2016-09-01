@@ -270,6 +270,31 @@ class CherryPieClient {
         this.doQuery('POST', escape('/campaigns'), data, {}, callback);
     }
 
+
+    /**
+     *
+     * Return campaign
+     * @param campaigName {string} campaign name
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
+    getCampaign(campaignName, callback) {
+        this.doQuery('GET', escape('/campaigns/' + campaignName), {}, {}, callback);
+    }
+
+
+    /**
+     *
+     * Update campaign
+     * @param campaigName {string} campaign name
+     * @param data {object}
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
+    updateCampaign(campaignName, data, callback) {
+        this.doQuery('PUT', escape('/campaigns/' + campaignName), data, {}, callback);
+    }
+
     /**
      *
      * Return all campaigns in Cherry Pie
@@ -367,23 +392,38 @@ class CherryPieClient {
         return agent1;
     }
 
+    updateTemplateWithImages(templateName, data, callback) {
+        let tmpFile = null;
+        let agent1 = request.agent();
+        agent1 = agent1.put(this.getBaseUrl() + '/templates/' + templateName);
+        for (let key of TemplateImageNamesList) {
+            if (typeof data[key] === "string")
+                agent1 = agent1.attach(key, data[key]);
+        }
+        agent1.field('jsonBody', JSON.stringify(data.jsonBody));
+        agent1 = agent1.set("Authorization", this.getAuthorization());
+        agent1 = agent1.end((err, res)=> {
+            callback(err, res);
+        });
+        return agent1;
+    }
+
     getTemplate(templateName, callback) {
         this.doQuery('GET', escape('/templates/' + templateName), {}, {}, callback);
     }
 
+    updateTemplate(templateName, data, callback) {
+        this.doQuery('PUT', escape('/templates/' + templateName), data, {}, callback);
+    }
+
+    pushTemplate(templateName, callback) {
+        this.doQuery('PUT', escape('/templates/' + templateName + '/push'), {}, {}, callback);
+    }
 
     /* PASS API */
-    createPass(templateName, userDefinedId, dynamicData, recoveryEmail, callback) {
-
+    createPass(passData, callback) {
         /* TODO - browse images data and upload them in to  uploadImage and set paths */
-        let data = {templateName};
-        if (userDefinedId)
-            data.userDefinedId = userDefinedId;
-        if (dynamicData)
-            data.dynamicData = dynamicData;
-        if (recoveryEmail)
-            data.recoveryEmail = recoveryEmail;
-        this.doQuery('POST', escape('/passes'), data, {}, callback);
+        this.doQuery('POST', escape('/passes'), passData, {}, callback);
     }
 
 
@@ -392,34 +432,13 @@ class CherryPieClient {
     }
 
 
-    updatePass(passId, templateName, userDefinedId, dynamicData, isInvalid, isRedeemed, recoveryEmail, callback) {
-
+    updatePass(passId, passData, callback) {
         /* TODO - browse images data and upload them in to  uploadImage and set paths */
-
-        let data = {templateName};
-        if (userDefinedId)
-            data.userDefinedId = userDefinedId;
-        if (dynamicData)
-            data.dynamicData = dynamicData;
-        if (recoveryEmail)
-            data.recoveryEmail = recoveryEmail;
-        if (isInvalid)
-            data.isInvalid = true;
-        else
-            data.isInvalid = false;
-
-        if (isRedeemed)
-            data.isRedeemed = true;
-        else
-            data.isRedeemed = false;
-
-        this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+        this.doQuery('PUT', escape('/passes/' + passId), passData, {}, callback);
     }
 
     redeemPass(passId, callback) {
-        let data = {};
-        data.isRedeemed = true;
-        this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+        this.doQuery('PUT', escape('/passes/' + passId + '/redeem'), {}, {}, callback);
     }
 
     invalidatePass(passId, callback) {
