@@ -1,6 +1,6 @@
 # ys-passkit-and-cherrypie-client
 
-Node.js clients for passkit and cherry pie API. 
+Node.js clients for Passkit and cherry pie API. 
 
 ## Passkit 
 

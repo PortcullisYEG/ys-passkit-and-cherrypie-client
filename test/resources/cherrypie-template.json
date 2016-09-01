@@ -1,0 +1,146 @@
+{
+  "name":"templateName",
+  "campaignName":"campaignName",
+  "status":"ACTIVE",
+  "language":"en",
+  "startDate":"2010-08-01T00:00:00Z",
+  "maxIssue":0,
+  "meta":{
+    "key1":123,
+    "key2":"value"
+  },
+  "dynamicKeys":[
+    {
+      "key":"memberPoints",
+      "type":"string",
+      "defaultValue":null,
+      "isEditable":false
+    },
+    {
+      "key":"memberName",
+      "type":"string",
+      "defaultValue":null,
+      "isEditable":true
+    }
+  ],
+  "dynamicImageKeys":{
+    "passbook":{
+      "background":{
+        "isDynamic":false,
+        "isEditable":false
+      },
+      "footer":{
+        "isDynamic":false,
+        "isEditable":false
+      },
+      "logo":{
+        "isDynamic":false,
+        "isEditable":false
+      },
+      "strip":{
+        "isDynamic":false,
+        "isEditable":false
+      },
+      "thumbnail":{
+        "isDynamic":false,
+        "isEditable":false
+      }
+    }
+  },
+  "passbook":{
+    "type":"generic",
+    "orgName":"Organisation Name",
+    "desc":"Basic description of the template.",
+    "assoStoreId":[
+      967907684
+    ],
+    "bgColor":"#FFFFFF",
+    "labelColor":"#000000",
+    "fgColor":"#AAAAAA",
+    "header":[
+      {
+        "changeMsg":"Your new point balance is %@",
+        "defaultLabel":"Points",
+        "defaultValue":"#{memberPoints}",
+        "textAlign":"right",
+        "format":{
+          "type":"number",
+          "numberFormat":"decimal"
+        }
+      }
+    ],
+    "secondary":[
+      {
+        "defaultValue":"Hello ${memberName}",
+        "textAlign":"left",
+        "format":{
+          "type":"text"
+        }
+      }
+    ],
+    "back":[
+      {
+        "defaultValue":[
+          {
+            "defaultLabel":"Find us",
+            "defaultValue":"contact.example.com",
+            "format":{
+              "type":"text"
+            }
+          },
+          {
+            "defaultLabel":"Customer Service Number",
+            "defaultValue":"1234567",
+            "format":{
+              "type":"text"
+            }
+          }
+        ]
+      },
+      {
+        "dynamicBackfieldKey":"personalisedOffers",
+        "defaultValue":[
+          {
+            "defaultLabel":"Default Offer A",
+            "defaultValue":"Default Offer A information",
+            "format":{
+              "type":"text"
+            }
+          },
+          {
+            "defaultLabel":"Default Offer B",
+            "defaultValue":"Default Offer B information",
+            "format":{
+              "type":"text"
+            }
+          },
+          {
+            "defaultLabel":"Default Offer C",
+            "defaultValue":"Default Offer C information",
+            "format":{
+              "type":"text"
+            }
+          }
+        ]
+      },
+      {
+        "defaultValue":[
+          {
+            "defaultLabel":"Terms & Conditions",
+            "defaultValue":"These are the terms and conditions for using this pass...",
+            "format":{
+              "type":"text"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "passbookLang":{
+    "fr":{
+      "text":{
+        "Hello":"Bonjour"
+      }
+    }
+  }
+}
