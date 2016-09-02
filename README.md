@@ -4,7 +4,7 @@ Node.js clients for Passkit and cherry pie API.
 
 ## Passkit 
 
-Full documentation for [PasskitClient](doc/README-PASSKIT.md)
+Full documentation for [PasskitClient](README-PASSKIT.md)
 
 ## CherryPie 
-Full documentation for [CherryPieClient](doc/README-CHERRY-PIE.md)
+Full documentation for [CherryPieClient](README-CHERRY-PIE.md)
