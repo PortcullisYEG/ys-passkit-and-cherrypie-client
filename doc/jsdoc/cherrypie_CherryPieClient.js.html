@@ -245,9 +245,9 @@ class CherryPieClient {
             if (err) {
                 callback(err, null);
             } else {
+
                 let response = {};
                 response.httpStatusCode = res.statusCode;
-                response.body = JSON.parse(data.toString());
                 switch (res.statusCode) {
                     case 400:
                         return callback(new Error('Bad Request – Your request sucks'), response);
@@ -267,6 +267,7 @@ class CherryPieClient {
                         callback(null, response);
                     }
                 }
+
             }
         });
     }
@@ -296,6 +297,31 @@ class CherryPieClient {
      */
     createCampaign(data, callback) {
         this.doQuery('POST', escape('/campaigns'), data, {}, callback);
+    }
+
+
+    /**
+     *
+     * Return campaign
+     * @param campaigName {string} campaign name
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
+    getCampaign(campaignName, callback) {
+        this.doQuery('GET', escape('/campaigns/' + campaignName), {}, {}, callback);
+    }
+
+
+    /**
+     *
+     * Update campaign
+     * @param campaigName {string} campaign name
+     * @param data {object}
+     * @param callback {function} standart callback function(error,response);
+     *
+     */
+    updateCampaign(campaignName, data, callback) {
+        this.doQuery('PUT', escape('/campaigns/' + campaignName), data, {}, callback);
     }
 
     /**
@@ -336,30 +362,13 @@ class CherryPieClient {
      *
      */
     uploadImage(image, callback) {
-        let tmpFile = null;
         let agent1 = request.agent();
         agent1 = agent1.post(this.getBaseUrl() + '/images');
 
         if (typeof image === "string")
             agent1 = agent1.attach('image', image);
-        /*
-         if (image instanceof Buffer)
-         fs.writeFileSync("/tmp/test", "Hey there!", function(err) {
-         if(err) {
-         return console.log(err);
-         }
-
-         console.log("The file was saved!");
-         });
-
-         agent1 = agent1.field('image', image);
-         */
-
-
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
-            //  if (tmpFile)
-            //     fs.unlinkSync(tmpFile);
             callback(err, res);
         });
         return agent1;
@@ -378,15 +387,27 @@ class CherryPieClient {
      *
      */
     createTemplate(data, callback) {
-
-        let tmpFile = null;
         let agent1 = request.agent();
         agent1 = agent1.post(this.getBaseUrl() + '/templates');
         for (let key of TemplateImageNamesList) {
             if (typeof data[key] === "string")
                 agent1 = agent1.attach(key, data[key]);
         }
-        //agent1 = agent1.send(data.jsonBody);
+        agent1.field('jsonBody', JSON.stringify(data.jsonBody));
+        agent1 = agent1.set("Authorization", this.getAuthorization());
+        agent1 = agent1.end((err, res)=> {
+            callback(err, res);
+        });
+        return agent1;
+    }
+
+    updateTemplateWithImages(templateName, data, callback) {
+        let agent1 = request.agent();
+        agent1 = agent1.put(this.getBaseUrl() + '/templates/' + templateName);
+        for (let key of TemplateImageNamesList) {
+            if (typeof data[key] === "string")
+                agent1 = agent1.attach(key, data[key]);
+        }
         agent1.field('jsonBody', JSON.stringify(data.jsonBody));
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
@@ -399,19 +420,18 @@ class CherryPieClient {
         this.doQuery('GET', escape('/templates/' + templateName), {}, {}, callback);
     }
 
+    updateTemplate(templateName, data, callback) {
+        this.doQuery('PUT', escape('/templates/' + templateName), data, {}, callback);
+    }
+
+    pushTemplate(templateName, callback) {
+        this.doQuery('PUT', escape('/templates/' + templateName + '/push'), {}, {}, callback);
+    }
 
     /* PASS API */
-    createPass(templateName, userDefinedId, dynamicData, recoveryEmail, callback) {
-
+    createPass(passData, callback) {
         /* TODO - browse images data and upload them in to  uploadImage and set paths */
-        let data = {templateName};
-        if (userDefinedId)
-            data.userDefinedId = userDefinedId;
-        if (dynamicData)
-            data.dynamicData = dynamicData;
-        if (recoveryEmail)
-            data.recoveryEmail = recoveryEmail;
-        this.doQuery('POST', escape('/passes'), data, {}, callback);
+        this.doQuery('POST', escape('/passes'), passData, {}, callback);
     }
 
 
@@ -419,41 +439,61 @@ class CherryPieClient {
         this.doQuery('GET', escape('/passes/' + passId), {}, {}, callback);
     }
 
-
-    updatePass(passId, templateName, userDefinedId, dynamicData, isInvalid, isRedeemed, recoveryEmail, callback) {
-
-        /* TODO - browse images data and upload them in to  uploadImage and set paths */
-
-        let data = {templateName};
-        if (userDefinedId)
-            data.userDefinedId = userDefinedId;
-        if (dynamicData)
-            data.dynamicData = dynamicData;
-        if (recoveryEmail)
-            data.recoveryEmail = recoveryEmail;
-        if (isInvalid)
-            data.isInvalid = true;
-        else
-            data.isInvalid = false;
-
-        if (isRedeemed)
-            data.isRedeemed = true;
-        else
-            data.isRedeemed = false;
-
-        this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+    getPassUserDefinedId(userDefinedId, campaignName, callback) {
+        this.doQuery('GET', escape('/passes'), {
+            userDefinedId: userDefinedId,
+            campaignName: campaignName
+        }, {}, callback);
     }
 
+    updatePass(passId, passData, callback) {
+        /* TODO - browse images data and upload them in to uploadImage and set paths */
+        this.doQuery('PUT', escape('/passes/' + passId), passData, {}, callback);
+    }
+
+    updatePassUserDefinedId(userDefinedId, campaignName, passData, callback) {
+        /* TODO - browse images data and upload them in to uploadImage and set paths */
+        this.doQuery('PUT', escape('/passes?' + `userDefinedId=${userDefinedId}&amp;campaignName=${campaignName}`), passData, {}, callback);
+    }
+
+
     redeemPass(passId, callback) {
-        let data = {};
-        data.isRedeemed = true;
-        this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+        this.doQuery('PUT', escape('/passes/' + passId + '/redeem'), {}, {}, callback);
     }
 
     invalidatePass(passId, callback) {
         let data = {};
         data.isInvalid = true;
         this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+    }
+
+    createPassesBatch(passesData, callback) {
+        this.doQuery('POST', escape('/passesBatch'), passesData, {}, callback);
+    }
+
+    updatePassesBatch(passesBatch, callback) {
+        this.doQuery('PUT', escape('/passesBatch'), passesBatch, {}, callback);
+    }
+
+    /* getPassesBatch(passIds, callback) {
+     let ids = '';
+     for (let id of passIds) {
+     ids = ids + (ids !== '' ? ',' : '') + id;
+     }
+     this.doQuery('GET', escape(`/passesBatch?id=${ids}`), {}, {}, callback);
+     }
+     */
+
+    searchPasses(query, callback) {
+        let agent1 = request.agent();
+        agent1 = agent1.post('https://search.passkit.net/v1/passes');
+        agent1 = agent1.set("Authorization", this.getAuthorization());
+        agent1 = agent1.send(query);
+        agent1 = agent1.end((err, res)=> {
+            callback(err, res);
+        });
+        return agent1;
+
     }
 
 }
@@ -474,7 +514,7 @@ module.exports = CherryPieClient;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 01 2016 13:27:30 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Sep 02 2016 10:55:00 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

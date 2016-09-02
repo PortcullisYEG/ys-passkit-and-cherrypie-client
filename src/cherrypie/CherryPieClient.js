@@ -217,9 +217,9 @@ class CherryPieClient {
             if (err) {
                 callback(err, null);
             } else {
+
                 let response = {};
                 response.httpStatusCode = res.statusCode;
-                response.body = JSON.parse(data.toString());
                 switch (res.statusCode) {
                     case 400:
                         return callback(new Error('Bad Request – Your request sucks'), response);
@@ -239,6 +239,7 @@ class CherryPieClient {
                         callback(null, response);
                     }
                 }
+
             }
         });
     }
@@ -373,7 +374,6 @@ class CherryPieClient {
     }
 
     updateTemplateWithImages(templateName, data, callback) {
-        let tmpFile = null;
         let agent1 = request.agent();
         agent1 = agent1.put(this.getBaseUrl() + '/templates/' + templateName);
         for (let key of TemplateImageNamesList) {
@@ -418,13 +418,12 @@ class CherryPieClient {
         }, {}, callback);
     }
 
-
     updatePass(passId, passData, callback) {
         /* TODO - browse images data and upload them in to uploadImage and set paths */
         this.doQuery('PUT', escape('/passes/' + passId), passData, {}, callback);
     }
 
-    updatePasssUserDefinedId(userDefinedId, campaignName, passData, callback) {
+    updatePassUserDefinedId(userDefinedId, campaignName, passData, callback) {
         /* TODO - browse images data and upload them in to uploadImage and set paths */
         this.doQuery('PUT', escape('/passes?' + `userDefinedId=${userDefinedId}&campaignName=${campaignName}`), passData, {}, callback);
     }
@@ -438,6 +437,35 @@ class CherryPieClient {
         let data = {};
         data.isInvalid = true;
         this.doQuery('PUT', escape('/passes/' + passId), data, {}, callback);
+    }
+
+    createPassesBatch(passesData, callback) {
+        this.doQuery('POST', escape('/passesBatch'), passesData, {}, callback);
+    }
+
+    updatePassesBatch(passesBatch, callback) {
+        this.doQuery('PUT', escape('/passesBatch'), passesBatch, {}, callback);
+    }
+
+    /* getPassesBatch(passIds, callback) {
+     let ids = '';
+     for (let id of passIds) {
+     ids = ids + (ids !== '' ? ',' : '') + id;
+     }
+     this.doQuery('GET', escape(`/passesBatch?id=${ids}`), {}, {}, callback);
+     }
+     */
+
+    searchPasses(query, callback) {
+        let agent1 = request.agent();
+        agent1 = agent1.post('https://search.passkit.net/v1/passes');
+        agent1 = agent1.set("Authorization", this.getAuthorization());
+        agent1 = agent1.send(query);
+        agent1 = agent1.end((err, res)=> {
+            callback(err, res);
+        });
+        return agent1;
+
     }
 
 }

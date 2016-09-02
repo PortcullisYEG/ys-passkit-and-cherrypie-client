@@ -21,6 +21,7 @@ let certificates = [];
 let templates = [];
 let template = null;
 let templateCoupon = null;
+let passes = null;
 
 const testImagePath = path.join(__dirname, "resources", "Generic.pass", "icon.png");
 
@@ -31,6 +32,7 @@ function logger(data) {
 
 
 describe(`CherryPie`, () => {
+
 
     it('get certificates', function (done) {
         this.timeout(TIMEOUT);
@@ -323,7 +325,7 @@ describe(`CherryPie`, () => {
                 }
             }
         };
-        client.updatePasssUserDefinedId(userDefinedId, campaign.name, pass, function (err, response) {
+        client.updatePassUserDefinedId(userDefinedId, campaign.name, pass, function (err, response) {
             logger(response.body);
             done(err);
         });
@@ -378,6 +380,153 @@ describe(`CherryPie`, () => {
         client.getPass(passId, function (err, response) {
             logger(response.body);
             done(err);
+        });
+    });
+
+
+    it('create passes batch', function (done) {
+        this.timeout(TIMEOUT);
+
+        const batch = {
+            passes: [{
+                templateName: template.name,
+                dynamicData: {
+                    "points": "1"
+                },
+            }, {
+                templateName: template.name,
+                dynamicData: {
+                    "points": "2"
+                },
+            }]
+        };
+
+        client.createPassesBatch(batch, function (err, response) {
+            logger(response.body);
+            passes = response.body.id;
+            done(err);
+        });
+    });
+
+
+    it('update passes batch', function (done) {
+        this.timeout(TIMEOUT);
+        const data = {};
+        data.passes = [];
+        for (let id of passes) {
+            data.passes.push({
+                id: id,
+                dynamicData: {
+                    "points": "25"
+                },
+            })
+        }
+        client.updatePassesBatch(data.passes, function (err, response) {
+            logger(response.body);
+            done(err);
+        });
+    });
+
+    /*
+     it('get passes batch', function (done) {
+     this.timeout(TIMEOUT);
+     client.getPassesBatch(passes, function (err, response) {
+     logger(response.body);
+     done(err);
+     });
+     });
+     */
+
+    it('search passes', function (done) {
+        this.timeout(TIMEOUT);
+        const query = {
+            "size": 1000,
+            "from": 0,
+            "passFilter": {
+                //   "id":"passId123",
+                //    "templateName":"templateName",
+                //   "campaignName":"campaignName",
+                //   "userDefinedId":"myPass123",
+                "isRedeemed": false,
+                "isInvalid": false,
+                "isVoided": false
+                /*   "expiryDate":{
+                 "gte":"2016-04-11T12:59:59Z"
+                 },
+                 "updatedAt":{
+                 "eq":"2015-04-11T13:00:00Z"
+                 },
+                 "createdAt":{
+                 "eq":"2015-04-11T13:00:00Z"
+                 },
+                 "firstUnregisterAt":{
+                 "exists":false
+                 },
+                 "lastUnregisterAt":{
+                 "exists":false
+                 },
+                 "firstRegisterAt":{
+                 "exists":false
+                 },
+                 "lastRegisterAt":{
+                 "exists":false
+                 },
+                 "lastRedeemAt":{
+                 "exists":false
+                 },
+                 "recoveryEmail":{
+                 "exists":false
+                 },
+                 "dynamicData":{
+                 "name":{
+                 "eq":"MrAwesome"
+                 },
+                 "point":{
+                 "lte":12
+                 },
+                 "balance":{
+                 "gt":900,
+                 "lt":1500
+                 }
+                 },
+                 "androidPayDevices":{
+                 "gte":5000,
+                 "lte":10000
+                 },
+                 "passbookDevices":{
+                 "gte":5000,
+                 "lte":10000
+                 }*/
+            }
+        };
+        client.searchPasses(query, function (err, response) {
+            logger(response.body);
+            done(err);
+        });
+    });
+
+
+    it('search valid passes and invalidthem in batch', function (done) {
+        this.timeout(TIMEOUT);
+        const query = {
+            "size": 1000,
+            "from": 0,
+            "passFilter": {
+                "isInvalid": false,
+            }
+        };
+        client.searchPasses(query, function (err, response) {
+            logger(response.body);
+            let p = response.body.data;
+            for (let i in p) {
+                p[i].isInvalid = true;
+            }
+            if (p.length > 25)
+                p = p.slice(0, 24);
+            client.updatePassesBatch(p, function (err, response) {
+                logger(response.body);
+                done(err);
+            });
         });
     });
 
