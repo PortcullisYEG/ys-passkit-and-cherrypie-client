@@ -375,7 +375,8 @@ class CherryPieClient {
             if (typeof data[key] === "string")
                 agent1 = agent1.attach(key, data[key]);
         }
-        agent1.field('jsonBody', JSON.stringify(data.jsonBody));
+        const body = JSON.stringify(data.jsonBody);
+        agent1.field('jsonBody', body);
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
             callback(err, res);

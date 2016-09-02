@@ -35,9 +35,6 @@ function logger(data) {
 describe(`CherryPie`, () => {
 
 
-
-
-
     it('get certificates', function (done) {
         this.timeout(TIMEOUT);
         client.getCetificates(function (err, response) {
@@ -151,7 +148,7 @@ describe(`CherryPie`, () => {
 
     it('update template', function (done) {
         this.timeout(TIMEOUT);
-        const data = templateJSON;
+        const data = {};
         data.meta = {
             "key1": 1234,
             "key2": "value2"
@@ -172,7 +169,7 @@ describe(`CherryPie`, () => {
 
     it('update template with images generic', function (done) {
         this.timeout(TIMEOUT);
-        const jsonBody = templateJSON;
+        const jsonBody = {};
         jsonBody.meta = {
             "key1": 12345,
             "key2": "value3"
@@ -252,7 +249,8 @@ describe(`CherryPie`, () => {
 
         client.createPass(pass, function (err, response) {
             logger(response.body);
-            passId = response.body.id;
+            if (!err)
+                passId = response.body.id;
             done(err);
         });
     });
@@ -398,7 +396,7 @@ describe(`CherryPie`, () => {
                     "points": "1"
                 }
             }, {
-                userDefinedId: "mojeID"+new Date().getTime(),
+                userDefinedId: "mojeID" + new Date().getTime(),
                 templateName: template.name,
                 dynamicData: {
                     "points": "2"
@@ -433,13 +431,13 @@ describe(`CherryPie`, () => {
     });
 
 
-     it('get passes batch', function (done) {
-     this.timeout(TIMEOUT);
-     client.getPassesBatch(passes, function (err, response) {
-     logger(response.body);
-     done(err);
-     });
-     });
+    it('get passes batch', function (done) {
+        this.timeout(TIMEOUT);
+        client.getPassesBatch(passes, function (err, response) {
+            logger(response.body);
+            done(err);
+        });
+    });
 
 
     it('search passes', function (done) {
