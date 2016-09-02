@@ -1,6 +1,6 @@
 {
   "name": "ys-passkit-and-cherrypie-client",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha",
   "description": "Simple Node.js client for passkit and cherrypie plugin",
   "main": "src/index.js",
   "engine": "node >= 6.4.0",
