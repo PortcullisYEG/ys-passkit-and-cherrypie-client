@@ -1,0 +1,56 @@
+{
+  "templateName":"templateName",
+  "dynamicData":{
+    "name":"Nicholas Bortoluzzi",
+    "nickName":"LKF Killer",
+    "point":12,
+    "balance":952.24
+  },
+  "dynamicImages":{
+    "passbook":{
+      "background":"images/dynamic/c183b523fb63c7d538b4b2a63446fa0a20ddca8c.png",
+      "footer":"images/dynamic/c183b523fb63c7d538b4b2a63446fa0a20ddca8d.png",
+      "icon":"images/dynamic/c183b523fb63c7d538b4b2a63446fa0a20ddca8e.png",
+      "logo":"images/dynamic/c183b523fb63c7d538b4b2a63446fa0a20ddca8f.png",
+      "strip":"images/dynamic/c183b523fb63c7d538b4b2a63446fa0a20ddca8g.png",
+      "thumbnail":"images/dynamic/c183b523fb63c7d538b4b2a63446fa0a20ddca8h.png"
+    }
+  },
+  "dynamicBackfields":{
+    "personalised-offers":[
+      {
+        "label":"Offer X",
+        "value":"Offer X information"
+      },
+      {
+        "label":"Offer Y",
+        "value":"Offer Y information"
+      },
+      {
+        "label":"Offer Z",
+        "value":"Offer Z information"
+      }
+    ],
+    "birthday-offers":[
+      {
+        "label":"Happy Birthday",
+        "value":"Buy one get two free"
+      }
+    ]
+  },
+  "userDefinedId":"E1234567",
+  "recoveryEmail":"hello@passkit.com",
+  "isVoided":true,
+  "isRedeemed":true,
+  "isInvalid":true,
+  "expiryDate":"2016-04-11T12:59:40Z",
+  "passbook":{
+    "groupId":"airline-1",
+    "bgColor":"#FFFFFF",
+    "labelColor":"000000",
+    "fgColor":"#E4F9A0",
+    "userInfo":{
+      "key":"value"
+    }
+  }
+}

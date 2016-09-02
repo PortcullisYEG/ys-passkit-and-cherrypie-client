@@ -333,30 +333,13 @@ class CherryPieClient {
      *
      */
     uploadImage(image, callback) {
-        let tmpFile = null;
         let agent1 = request.agent();
         agent1 = agent1.post(this.getBaseUrl() + '/images');
 
         if (typeof image === "string")
             agent1 = agent1.attach('image', image);
-        /*
-         if (image instanceof Buffer)
-         fs.writeFileSync("/tmp/test", "Hey there!", function(err) {
-         if(err) {
-         return console.log(err);
-         }
-
-         console.log("The file was saved!");
-         });
-
-         agent1 = agent1.field('image', image);
-         */
-
-
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
-            //  if (tmpFile)
-            //     fs.unlinkSync(tmpFile);
             callback(err, res);
         });
         return agent1;
@@ -375,15 +358,12 @@ class CherryPieClient {
      *
      */
     createTemplate(data, callback) {
-
-        let tmpFile = null;
         let agent1 = request.agent();
         agent1 = agent1.post(this.getBaseUrl() + '/templates');
         for (let key of TemplateImageNamesList) {
             if (typeof data[key] === "string")
                 agent1 = agent1.attach(key, data[key]);
         }
-        //agent1 = agent1.send(data.jsonBody);
         agent1.field('jsonBody', JSON.stringify(data.jsonBody));
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
@@ -431,11 +411,24 @@ class CherryPieClient {
         this.doQuery('GET', escape('/passes/' + passId), {}, {}, callback);
     }
 
+    getPassUserDefinedId(userDefinedId, campaignName, callback) {
+        this.doQuery('GET', escape('/passes'), {
+            userDefinedId: userDefinedId,
+            campaignName: campaignName
+        }, {}, callback);
+    }
+
 
     updatePass(passId, passData, callback) {
-        /* TODO - browse images data and upload them in to  uploadImage and set paths */
+        /* TODO - browse images data and upload them in to uploadImage and set paths */
         this.doQuery('PUT', escape('/passes/' + passId), passData, {}, callback);
     }
+
+    updatePasssUserDefinedId(userDefinedId, campaignName, passData, callback) {
+        /* TODO - browse images data and upload them in to uploadImage and set paths */
+        this.doQuery('PUT', escape('/passes?' + `userDefinedId=${userDefinedId}&campaignName=${campaignName}`), passData, {}, callback);
+    }
+
 
     redeemPass(passId, callback) {
         this.doQuery('PUT', escape('/passes/' + passId + '/redeem'), {}, {}, callback);

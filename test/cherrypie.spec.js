@@ -152,7 +152,6 @@ describe(`CherryPie`, () => {
         };
         client.updateTemplate(template.name, data, function (err, response) {
             logger(response.body);
-            template = response.body;
             done(err);
         });
     });
@@ -170,7 +169,7 @@ describe(`CherryPie`, () => {
         const jsonBody = templateJSON;
         jsonBody.meta = {
             "key1": 12345,
-            "key2": "value2"
+            "key2": "value3"
         };
         const data = {
             jsonBody: jsonBody,
@@ -183,7 +182,6 @@ describe(`CherryPie`, () => {
         };
         client.updateTemplateWithImages(template.name, data, function (err, response) {
             logger(response.body);
-            //template = response.body;
             done(err);
         });
     });
@@ -205,19 +203,9 @@ describe(`CherryPie`, () => {
             jsonBody: templateJSON,
             'passbook-IconFile': path.join(__dirname, "resources", "Coupon.pass", "icon.png"),
             'passbook-LogoFile': path.join(__dirname, "resources", "Coupon.pass", "logo.png"),
-            // 'passbook-StripFile': path.join(__dirname,"resources","Event.pass","logo.png"),
-            // 'passbook-FooterFile',
-            //'passbook-ThumbFile': path.join(__dirname, "resources", "Coupon.pass", "thumbnail.png"),
-            //  'passbook-BgFile',
             'passbookRedeem-IconFile': path.join(__dirname, "resources", "Coupon.pass", "icon.png"),
             'passbookRedeem-LogoFile': path.join(__dirname, "resources", "Coupon.pass", "logo.png"),
-            //  'passbookRedeem-StripFile',
-            //  'passbookRedeem-FooterFile',
-            //'passbookRedeem-ThumbFile': path.join(__dirname, "resources", "Coupon.pass", "thumbnail.png"),
-            // 'passbookRedeem-BgFile'
         };
-
-
         client.createTemplate(data, function (err, response) {
             logger(response.body);
             templateCoupon = response.body;
@@ -278,9 +266,24 @@ describe(`CherryPie`, () => {
             templateName: templateCoupon.name,
             userDefinedId: userDefinedId,
             dynamicData: {
-                "points": "20"
+                "points": "30"
             },
-            recoveryEmail: recoveryEmail
+            dynamicImages: {},
+            dynamicBackfields: {},
+            recoveryEmail: recoveryEmail,
+            isVoided: false,
+            isRedeemed: false,
+            isInvalid: false,
+            expiryDate: new Date(),
+            passbook: {
+                "groupId": "airline-1",
+                "bgColor": "#FFFFFF",
+                "labelColor": "000000",
+                "fgColor": "#E4F9A0",
+                "userInfo": {
+                    "key": "value"
+                }
+            }
         };
         client.updatePass(passId, pass, function (err, response) {
             logger(response.body);
@@ -292,6 +295,53 @@ describe(`CherryPie`, () => {
     it('get pass instance by passID', function (done) {
         this.timeout(TIMEOUT);
         client.getPass(passId, function (err, response) {
+            logger(response.body);
+            done(err);
+        });
+    });
+
+    it('update pass instance by userDefinedId and campaignName', function (done) {
+        this.timeout(TIMEOUT);
+        const pass = {
+            dynamicData: {
+                "points": "40"
+            },
+            dynamicImages: {},
+            dynamicBackfields: {},
+            recoveryEmail: recoveryEmail,
+            isVoided: false,
+            isRedeemed: false,
+            isInvalid: false,
+            expiryDate: new Date(),
+            passbook: {
+                "groupId": "airline-2",
+                "bgColor": "#FFFFFF",
+                "labelColor": "000000",
+                "fgColor": "#E4F9A0",
+                "userInfo": {
+                    "key": "value"
+                }
+            }
+        };
+        client.updatePasssUserDefinedId(userDefinedId, campaign.name, pass, function (err, response) {
+            logger(response.body);
+            done(err);
+        });
+    });
+
+
+    it('get pass instance by passID', function (done) {
+        this.timeout(TIMEOUT);
+        client.getPass(passId, function (err, response) {
+            logger(response.body);
+            done(err);
+        });
+    });
+
+
+    it('get pass instance by userDefinedId', function (done) {
+        this.timeout(TIMEOUT);
+        client.getPassUserDefinedId(userDefinedId, campaign.name, function (err, response) {
             logger(response.body);
             done(err);
         });
