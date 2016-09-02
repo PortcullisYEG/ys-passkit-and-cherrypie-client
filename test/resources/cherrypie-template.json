@@ -57,6 +57,16 @@
     "bgColor":"#FFFFFF",
     "labelColor":"#000000",
     "fgColor":"#AAAAAA",
+
+    "barcode":{
+      "altText":"Text below the barcode",
+      "altTextOption":"pid",
+      "format":"qr",
+      "message":"BarcodeText",
+      "messageOption":"pid",
+      "messageEncoding":"UTF-8"
+    },
+
     "header":[
       {
         "changeMsg":"Your new point balance is %@",

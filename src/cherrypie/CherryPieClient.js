@@ -350,11 +350,6 @@ class CherryPieClient {
      *
      * create template for campaign
      * @param data
-     *
-     *
-     *
-     *
-     *
      * @param callback {function} standart callback function(error,response);
      *
      */
@@ -447,14 +442,14 @@ class CherryPieClient {
         this.doQuery('PUT', escape('/passesBatch'), passesBatch, {}, callback);
     }
 
-    /* getPassesBatch(passIds, callback) {
-     let ids = '';
-     for (let id of passIds) {
-     ids = ids + (ids !== '' ? ',' : '') + id;
-     }
-     this.doQuery('GET', escape(`/passesBatch?id=${ids}`), {}, {}, callback);
-     }
-     */
+    getPassesBatch(passIds, callback) {
+        let ids = '';
+        for (let id of passIds) {
+            ids = ids + (ids !== '' ? ',' : '') + id;
+        }
+        this.doQuery('GET', escape(`/passesBatch?id=${ids}`), {}, {}, callback);
+    }
+
 
     searchPasses(query, callback) {
         let agent1 = request.agent();

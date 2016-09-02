@@ -31,3 +31,7 @@ let options = {
 const client = new CherryPieClient(options);
 ```
   
+
+
+
+if you do need own distribution (email, url), pass can be distribute via URL https://q.passkit.net/~/#/p/{passID}

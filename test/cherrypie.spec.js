@@ -27,11 +27,15 @@ const testImagePath = path.join(__dirname, "resources", "Generic.pass", "icon.pn
 
 
 function logger(data) {
-    console.log(JSON.stringify(data, null, 2));
+    if (process.env.LOG == "true")
+        console.log(JSON.stringify(data, null, 2));
 }
 
 
 describe(`CherryPie`, () => {
+
+
+
 
 
     it('get certificates', function (done) {
@@ -392,12 +396,13 @@ describe(`CherryPie`, () => {
                 templateName: template.name,
                 dynamicData: {
                     "points": "1"
-                },
+                }
             }, {
+                userDefinedId: "mojeID"+new Date().getTime(),
                 templateName: template.name,
                 dynamicData: {
                     "points": "2"
-                },
+                }
             }]
         };
 
@@ -427,7 +432,7 @@ describe(`CherryPie`, () => {
         });
     });
 
-    /*
+
      it('get passes batch', function (done) {
      this.timeout(TIMEOUT);
      client.getPassesBatch(passes, function (err, response) {
@@ -435,7 +440,7 @@ describe(`CherryPie`, () => {
      done(err);
      });
      });
-     */
+
 
     it('search passes', function (done) {
         this.timeout(TIMEOUT);
@@ -513,10 +518,11 @@ describe(`CherryPie`, () => {
             "from": 0,
             "passFilter": {
                 "isInvalid": false,
+                "isVoided": false,
             }
         };
         client.searchPasses(query, function (err, response) {
-            logger(response.body);
+            //logger(response.body);
             let p = response.body.data;
             for (let i in p) {
                 p[i].isInvalid = true;
@@ -529,6 +535,5 @@ describe(`CherryPie`, () => {
             });
         });
     });
-
 
 });
