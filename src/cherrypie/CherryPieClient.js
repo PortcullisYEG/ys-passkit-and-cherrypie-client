@@ -213,12 +213,17 @@ class CherryPieClient {
             http_options.data = data;
         }
 
-        client.request(this.getBaseUrl() + endpoint, http_options, function (err, data, res) {
+        const url = this.getBaseUrl() + endpoint;
+        const start = new Date();
+        const self = this;
+        this.log(`${http_method} ${url} start`);
+
+        client.request(url, http_options, function (err, data, res) {
             if (err) {
                 callback(err, null);
             } else {
-
                 let response = {};
+                self.log(`${http_method} ${url} end with status ${res.statusCode} in (${new Date().getTime() - start.getTime()}ms)`);
                 response.httpStatusCode = res.statusCode;
                 switch (res.statusCode) {
                     case 400:
@@ -334,13 +339,20 @@ class CherryPieClient {
      *
      */
     uploadImage(image, callback) {
+
+        const url = this.getBaseUrl() + '/images';
+        this.log(`POST ${url} start`);
+        const start = new Date();
+        const self = this;
+
         let agent1 = request.agent();
-        agent1 = agent1.post(this.getBaseUrl() + '/images');
+        agent1 = agent1.post(url);
 
         if (typeof image === "string")
             agent1 = agent1.attach('image', image);
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
+            self.log(`POST ${url} end with status ${res.statusCode} in (${new Date().getTime() - start.getTime()}ms)`);
             callback(err, res);
         });
         return agent1;
@@ -355,7 +367,11 @@ class CherryPieClient {
      */
     createTemplate(data, callback) {
         let agent1 = request.agent();
-        agent1 = agent1.post(this.getBaseUrl() + '/templates');
+        const url = this.getBaseUrl() + '/templates';
+        this.log(`POST ${url} start`);
+        const start = new Date();
+        const self = this;
+        agent1 = agent1.post(url);
         for (let key of TemplateImageNamesList) {
             if (typeof data[key] === "string")
                 agent1 = agent1.attach(key, data[key]);
@@ -363,6 +379,7 @@ class CherryPieClient {
         agent1.field('jsonBody', JSON.stringify(data.jsonBody));
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
+            self.log(`POST ${url} end with status ${res.statusCode} in (${new Date().getTime() - start.getTime()}ms)`);
             callback(err, res);
         });
         return agent1;
@@ -370,7 +387,11 @@ class CherryPieClient {
 
     updateTemplateWithImages(templateName, data, callback) {
         let agent1 = request.agent();
-        agent1 = agent1.put(this.getBaseUrl() + '/templates/' + templateName);
+        const url = this.getBaseUrl() + '/templates/' + templateName
+        this.log(`PUT ${url} start`);
+        const start = new Date();
+
+        agent1 = agent1.put(url);
         for (let key of TemplateImageNamesList) {
             if (typeof data[key] === "string")
                 agent1 = agent1.attach(key, data[key]);
@@ -379,6 +400,7 @@ class CherryPieClient {
         agent1.field('jsonBody', body);
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.end((err, res)=> {
+            this.log(`PUT ${url} end with status ${res.statusCode} in (${new Date().getTime() - start.getTime()}ms)`);
             callback(err, res);
         });
         return agent1;
@@ -454,14 +476,29 @@ class CherryPieClient {
 
     searchPasses(query, callback) {
         let agent1 = request.agent();
-        agent1 = agent1.post('https://search.passkit.net/v1/passes');
+
+        const start = new Date();
+        const self = this;
+        const url = 'https://search.passkit.net/v1/passes';
+        this.log(`POST ${url} start`);
+
+
+
+        agent1 = agent1.post(url);
         agent1 = agent1.set("Authorization", this.getAuthorization());
         agent1 = agent1.send(query);
         agent1 = agent1.end((err, res)=> {
+            this.log(`POST ${url} end with status ${res.statusCode} in (${new Date().getTime() - start.getTime()}ms)`);
             callback(err, res);
         });
         return agent1;
 
+    }
+
+    log(message) {
+        if (process.env.CHERRYPIE_DEBUG === "true") {
+            console.log(`CHERRY_PIE_CLIENT - [${new Date().toISOString()}] - ${message}`)
+        }
     }
 
 }
