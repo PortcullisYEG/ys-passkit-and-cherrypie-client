@@ -27,7 +27,7 @@ const testImagePath = path.join(__dirname, "resources", "Generic.pass", "icon.pn
 
 
 function logger(data) {
-    if (process.env.LOG == "true")
+    if (process.env.CHERRYPIE_DEBUG == "true")
         console.log(JSON.stringify(data, null, 2));
 }
 
@@ -242,7 +242,8 @@ describe(`CherryPie`, () => {
             templateName: template.name,
             userDefinedId: userDefinedId,
             dynamicData: {
-                "points": "10"
+                "points": "10",
+                "barcode": userDefinedId,
             },
             recoveryEmail: recoveryEmail
         };
@@ -393,13 +394,15 @@ describe(`CherryPie`, () => {
             passes: [{
                 templateName: template.name,
                 dynamicData: {
-                    "points": "1"
+                    "points": "1",
+                    "barcode": "barcode"+new Date().getTime(),
                 }
             }, {
                 userDefinedId: "mojeID" + new Date().getTime(),
                 templateName: template.name,
                 dynamicData: {
-                    "points": "2"
+                    "points": "2",
+                    "barcode": "barcode"+new Date().getTime(),
                 }
             }]
         };

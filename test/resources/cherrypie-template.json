@@ -59,11 +59,11 @@
     "fgColor":"#AAAAAA",
 
     "barcode":{
-      "altText":"Text below the barcode",
-      "altTextOption":"pid",
+      "altText":"#{barcode}",
+      "altTextOption":"text",
       "format":"qr",
-      "message":"BarcodeText",
-      "messageOption":"pid",
+      "message":"#{barcode}",
+      "messageOption":"text",
       "messageEncoding":"UTF-8"
     },
 
