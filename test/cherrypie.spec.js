@@ -512,7 +512,7 @@ describe(`CherryPie`, () => {
     });
 
 
-    it('search valid passes and invalidthem in batch', function (done) {
+  /*  it('search valid passes and invalidthem in batch', function (done) {
         this.timeout(TIMEOUT);
         const query = {
             "size": 1000,
@@ -536,5 +536,5 @@ describe(`CherryPie`, () => {
             });
         });
     });
-
+*/
 });
