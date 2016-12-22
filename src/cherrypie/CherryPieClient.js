@@ -12,8 +12,8 @@ const default_options = {
     'connection_timeout': '10000',
     'connection_readtimeout': '30000',
     'url': 'https://api-pass.passkit.net',
-    'apiKey': '',
-    'apiSecret': '',
+    'apiKey': 'VGfNlpqJfIWXJrHiWIHtsHlRJvHHZILc',
+    'apiSecret': '8lLDXQ5wVlUq1lrvfYUgSHltnSeukbd1Gs7IOxxB1A4wwy7Pty2GP7sPzn7Ismqk8aHR8CNsTNUCsSbR03jYwRR0RcgCuwvCKEdplX8ibKLDj0iUSUOFdLLuAK66UWtp',
     'apiVersion': 'v2',
 };
 
